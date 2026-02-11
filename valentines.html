@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Will You Be My Valentine? 💕</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+height:100vh;
+overflow:hidden;
+display:flex;
+justify-content:center;
+align-items:center;
+font-family:'Poppins',sans-serif;
+background:linear-gradient(135deg,#ffe6f2,#ffd6ec);
+}
+
+/* Background glow */
+.background{
+position:fixed;
+width:100%;
+height:100%;
+background:radial-gradient(circle at top left,#fff0f6,#ffd6ec,#ffc2e2);
+filter:blur(60px);
+opacity:0.7;
+z-index:0;
+}
+
+/* Main content */
+.container{
+text-align:center;
+z-index:10;
+position:relative;
+}
+
+h1{
+font-family:'Pacifico',cursive;
+font-size:3rem;
+color:#ff4d94;
+text-shadow:0 0 15px #ff99cc;
+margin-bottom:20px;
+animation:float 3s ease-in-out infinite;
+}
+
+@keyframes float{
+0%,100%{transform:translateY(0);}
+50%{transform:translateY(-15px);}
+}
+
+.message{
+font-size:1.2rem;
+color:#ff4d94;
+min-height:30px;
+margin-bottom:30px;
+}
+
+.buttons{
+position:relative;
+}
+
+button{
+padding:15px 35px;
+font-size:1.2rem;
+border:none;
+border-radius:50px;
+cursor:pointer;
+margin:10px;
+transition:0.3s ease;
+}
+
+#yesBtn{
+background:#ff4d94;
+color:white;
+box-shadow:0 5px 20px rgba(255,77,148,0.5);
+}
+
+#yesBtn:hover{
+transform:scale(1.2);
+}
+
+#noBtn{
+background:white;
+color:#ff4d94;
+position:absolute;
+}
+
+/* Floating hearts */
+.heart{
+position:absolute;
+font-size:20px;
+animation:floatUp linear forwards;
+pointer-events:none;
+}
+
+@keyframes floatUp{
+from{transform:translateY(100vh);opacity:1;}
+to{transform:translateY(-10vh);opacity:0;}
+}
+
+/* Bears */
+.bear{
+position:absolute;
+pointer-events:none;
+animation-timing-function:linear;
+}
+
+@keyframes runRight{
+from{transform:translateX(-10vw);}
+to{transform:translateX(110vw);}
+}
+
+@keyframes runLeft{
+from{transform:translateX(110vw);}
+to{transform:translateX(-10vw);}
+}
+
+@keyframes bounceBear{
+0%,100%{transform:translateY(0);}
+50%{transform:translateY(-20px);}
+}
+
+/* Popup */
+.popup{
+position:fixed;
+width:100%;
+height:100%;
+background:rgba(255,192,203,0.95);
+display:none;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+z-index:20;
+animation:fadeIn 0.5s ease;
+text-align:center;
+}
+
+@keyframes fadeIn{
+from{opacity:0;}
+to{opacity:1;}
+}
+
+.popup h2{
+font-family:'Pacifico',cursive;
+font-size:3rem;
+color:white;
+margin-bottom:20px;
+}
+
+.celebrateBear{
+font-size:5rem;
+animation:wiggle 1s infinite;
+}
+
+@keyframes wiggle{
+0%,100%{transform:rotate(0);}
+50%{transform:rotate(8deg);}
+}
+</style>
+</head>
+
+<body>
+
+<div class="background"></div>
+
+<div class="container">
+<h1>Will you be my Valentine? 💖</h1>
+<div class="message" id="typewriter"></div>
+
+<div class="buttons">
+<button id="yesBtn">Yes 💕</button>
+<button id="noBtn">No 😢</button>
+</div>
+</div>
+
+<div class="popup" id="popup">
+<div class="celebrateBear">🧸💗</div>
+<h2>WIIIIII 💞</h2>
+<p style="color:white;font-size:1.3rem;">
+You just made my heart explode with happiness 😭💕
+</p>
+</div>
+
+<script>
+
+/* TYPEWRITER */
+const messages = [
+"I promise I’ll take you on motorcycle rides 🏍️💨",
+"I’ll love you a little more every single day 💖",
+"I’ll send you the cutest reels I can find 🥰",
+"And yes… I’ll annoy you on purpose 😌💕"
+];
+
+let index = 0;
+let charIndex = 0;
+const typewriter = document.getElementById("typewriter");
+
+function typeEffect(){
+if(charIndex < messages[index].length){
+typewriter.innerHTML += messages[index].charAt(charIndex);
+charIndex++;
+setTimeout(typeEffect,40);
+}else{
+setTimeout(()=>{
+typewriter.innerHTML="";
+charIndex=0;
+index=(index+1)%messages.length;
+typeEffect();
+},1500);
+}
+}
+typeEffect();
+
+/* BUTTON LOGIC */
+const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
+const popup = document.getElementById("popup");
+
+let scale=1;
+
+noBtn.addEventListener("mouseover",()=>{
+const x=Math.random()*(window.innerWidth-100);
+const y=Math.random()*(window.innerHeight-50);
+noBtn.style.left=`${x}px`;
+noBtn.style.top=`${y}px`;
+
+scale+=0.15;
+yesBtn.style.transform=`scale(${scale})`;
+noBtn.style.transform=`scale(${1-scale/5})`;
+});
+
+yesBtn.addEventListener("click",()=>{
+popup.style.display="flex";
+confetti();
+});
+
+/* HEART CONFETTI */
+function confetti(){
+for(let i=0;i<120;i++){
+const heart=document.createElement("div");
+heart.classList.add("heart");
+heart.innerHTML="💖";
+heart.style.left=Math.random()*100+"vw";
+heart.style.fontSize=(Math.random()*20+15)+"px";
+heart.style.animationDuration=(Math.random()*2+1)+"s";
+document.body.appendChild(heart);
+setTimeout(()=>heart.remove(),3000);
+}
+}
+
+/* CONTINUOUS FLOATING HEARTS */
+setInterval(()=>{
+const heart=document.createElement("div");
+heart.classList.add("heart");
+heart.innerHTML="💗";
+heart.style.left=Math.random()*100+"vw";
+heart.style.fontSize=(Math.random()*15+10)+"px";
+heart.style.animationDuration=(Math.random()*3+2)+"s";
+document.body.appendChild(heart);
+setTimeout(()=>heart.remove(),5000);
+},400);
+
+/* MANY BEARS */
+function createBear(){
+const bear=document.createElement("div");
+bear.classList.add("bear");
+
+const bearTypes=["🧸","🧸💗","🧸✨"];
+bear.innerHTML=bearTypes[Math.floor(Math.random()*bearTypes.length)];
+
+bear.style.top=Math.random()*85+"vh";
+bear.style.fontSize=(Math.random()*30+25)+"px";
+
+const direction=Math.random()>0.5?"runRight":"runLeft";
+const duration=(Math.random()*6+6)+"s";
+bear.style.animation=`${direction} ${duration} linear`;
+
+if(Math.random()>0.7){
+bear.style.animation+=`, bounceBear 1.5s ease-in-out infinite`;
+}
+
+document.body.appendChild(bear);
+setTimeout(()=>bear.remove(),12000);
+}
+
+setInterval(createBear,800);
+
+for(let i=0;i<10;i++){
+createBear();
+}
+
+/* SPARKLE CURSOR */
+document.addEventListener("mousemove",function(e){
+const sparkle=document.createElement("div");
+sparkle.innerHTML="✨";
+sparkle.style.position="absolute";
+sparkle.style.left=e.pageX+"px";
+sparkle.style.top=e.pageY+"px";
+sparkle.style.fontSize="14px";
+sparkle.style.pointerEvents="none";
+sparkle.style.opacity="1";
+sparkle.style.transition="all 0.6s ease-out";
+document.body.appendChild(sparkle);
+
+setTimeout(()=>{
+sparkle.style.opacity="0";
+sparkle.style.transform="translateY(-20px)";
+},10);
+
+setTimeout(()=>{
+sparkle.remove();
+},600);
+});
+
+</script>
+
+</body>
+</html>
